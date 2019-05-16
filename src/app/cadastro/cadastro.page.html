@@ -1,0 +1,135 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Cadastro
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <form [formGroup]="todo">
+
+
+
+
+    <ion-item>
+
+      <ion-label stacked>Nome:</ion-label>
+      <ion-input aria-required="nome" tabindex="0" type="text" formControlName="nome"></ion-input>
+      <div class="validation-errors">
+        <ng-container *ngFor="let validation of validation_messages.nome">
+          
+          <div class="error-message"
+            *ngIf="todo.get('nome').hasError(validation.type) && (submitAttempt || todo.get('nome').dirty || todo.get('nome').touched)">
+            {{ validation.message }}
+          </div>
+        </ng-container>
+      </div>
+
+    </ion-item>
+    <ion-item>
+
+      <ion-label>Endereço:</ion-label>
+      <ion-input tabindex="1" type="text" formControlName="endereco"></ion-input>
+      <div class="validation-errors">
+        <ng-container *ngFor="let validation of validation_messages.endereco">
+          <div class="error-message"
+            *ngIf="todo.get('endereco').hasError(validation.type) && (submitAttempt || todo.get('endereco').dirty || todo.get('endereco').touched)">
+            {{ validation.message }}
+          </div>
+        </ng-container>
+      </div>
+
+    </ion-item>
+    <ion-item>
+
+      <ion-label stacked>Telefone:</ion-label>
+      <ion-input tabindex="2" type="text" [brmasker]="{form: todo.get('telefone'), phone: true}"  formControlName="telefone"></ion-input>
+      <div class="validation-errors">
+        <ng-container *ngFor="let validation of validation_messages.telefone">
+          <div class="error-message"
+            *ngIf="todo.get('telefone').hasError(validation.type) && (submitAttempt || todo.get('telefone').dirty || todo.get('telefone').touched)">
+            {{ validation.message }}
+          </div>
+        </ng-container>
+      </div>
+
+    </ion-item>
+    <ion-item>
+
+      <ion-label stacked>E-mail:</ion-label>
+      <ion-input tabindex="3" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" formControlName="email" type="email">
+      </ion-input>
+
+      <div class="validation-errors">
+        
+        <ng-container *ngFor="let validation of validation_messages.email">
+              
+          <div class="error-message"
+            *ngIf="todo.get('email').hasError(validation.type) && (submitAttempt || todo.get('email').dirty || todo.get('email').touched)">
+            {{ validation.message }}
+          </div>
+        </ng-container>
+      </div>
+
+    </ion-item>
+    <ion-item>
+
+      <ion-label stacked>CPF:</ion-label>
+      <ion-input tabindex="4" type="text" formControlName="cpf" [brmasker]="{form: todo.get('cpf'), mask:'999.999.999-99',type:'num', len:14}" required></ion-input>
+      <div class="validation-errors">
+        <ng-container *ngFor="let validation of validation_messages.cpf">
+          <div class="error-message"
+            *ngIf="todo.get('cpf').hasError(validation.type) && (submitAttempt || todo.get('cpf').dirty || todo.get('cpf').touched)">
+            {{ validation.message }}
+          </div>
+        </ng-container>
+      </div>
+
+    </ion-item>
+    <ion-card class="cardFull">
+
+      <ion-item>
+
+        <ion-label stacked>Login:</ion-label>
+        <ion-input tabindex="5" type="text" formControlName="login" class="form-controll" required>
+        </ion-input>
+        <div class="validation-errors">
+          <ng-container *ngFor="let validation of validation_messages.login">
+            <div class="error-message"
+              *ngIf="todo.get('login').hasError(validation.type) && (submitAttempt || todo.get('login').dirty || todo.get('login').touched)">
+              {{ validation.message }}
+            </div>
+          </ng-container>
+        </div>
+
+      </ion-item>
+      <ion-item>
+
+        <ion-label stacked>Senha:</ion-label>
+        <ion-input tabindex="6" type="password" formControlName="senha" required></ion-input>
+        <div class="validation-errors">
+          <ng-container *ngFor="let validation of validation_messages.senha">
+            <div class="error-message"
+              *ngIf="todo.get('senha').hasError(validation.type) && ((submitAttempt || todo.get('senha').dirty || todo.get('senha').touched))">
+              {{ validation.message }}
+            </div>
+          </ng-container>
+        </div>
+
+      </ion-item>
+    </ion-card>
+
+    <div text-center margin-top>
+      <ion-button color="danger" type="submit" tabindex="7" (click)="cadastrar()" margin-right>Salvar</ion-button>
+
+      <ion-button color="danger" tabindex="8" margin-right (click)="cancelar()">Cancelar</ion-button>
+
+    </div>
+
+
+
+  </form>
+</ion-content>

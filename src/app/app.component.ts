@@ -9,17 +9,35 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
+
+  public logado = false;
+  
   public appPages = [
     {
-      title: 'Home',
+      title: 'Gritar!!!',
       url: '/home',
-      icon: 'home'
+      icon: 'md-megaphone',
+      isVisible: this.verificaLogado()
     },
     {
-      title: 'List',
-      url: '/list',
-      icon: 'list'
+      title: 'Sobre Nós',
+      url: '/sobre',
+      icon: 'md-female',
+      isVisible: this.verificaLogado()
+    },
+    {
+      title: 'Infos',
+      url: '/info',
+      icon: 'md-information-circle',
+      isVisible: this.verificaLogado()
+    },
+    {
+      title: 'Sair',
+      url: '/login',
+      icon: 'exit',
+      isVisible: this.verificaLogado()
     }
+    
   ];
 
   constructor(
@@ -30,10 +48,18 @@ export class AppComponent {
     this.initializeApp();
   }
 
+     
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
+
+     
   }
+  verificaLogado()
+  {
+    return window.localStorage.getItem("logado");
+  }
+
 }

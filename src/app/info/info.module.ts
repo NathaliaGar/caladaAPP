@@ -3,21 +3,26 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
-
-import { ListPage } from './list.page';
+import { HttpClientModule } from '@angular/common/http';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { InfoPage } from './info.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
+    HttpClientModule,
     RouterModule.forChild([
       {
         path: '',
-        component: ListPage
+        component: InfoPage
       }
     ])
   ],
-  declarations: [ListPage]
+  declarations: [InfoPage],
+  providers: [
+    Geolocation
+  ]
 })
-export class ListPageModule {}
+export class InfoPageModule {}

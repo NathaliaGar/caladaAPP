@@ -1,6 +1,8 @@
 {
   "name": "salveMariaAPP",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular",
   "id": "fe9fede4"
 }
