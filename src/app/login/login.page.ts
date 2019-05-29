@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Routes } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-login',
@@ -15,9 +16,21 @@ export class LoginPage implements OnInit {
   public username;
   public password;
   public messageError = '';
-  constructor(private http: HttpClient) { 
+  constructor(private storage: Storage, private http: HttpClient) { 
 
+    this.storage.get("logado").then(function (value) {
+      if (value != null) {
+        
+        window.localStorage.setItem("logado", value);
 
+        document.location.href = "/home"
+      }
+      else {
+        
+        window.localStorage.removeItem("logado");
+
+      }
+    })
   }
 
   ngOnInit() {
@@ -47,7 +60,11 @@ export class LoginPage implements OnInit {
         if(res != null && res != '')
         {          
           window.localStorage.setItem("logado", JSON.stringify(res));
-   
+          
+          this.storage.set('logado', JSON.stringify(res));
+
+          
+          
           window.location.href = "/home";
         }
         else

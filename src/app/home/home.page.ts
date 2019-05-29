@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { Storage } from '@ionic/storage';
 
 
 @Component({
@@ -10,7 +11,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 })
 export class HomePage {
 
-  constructor(private http: HttpClient, private geolocation: Geolocation) {
+  constructor(private http: HttpClient, private geolocation: Geolocation, private storage: Storage) {
 
 
   }
@@ -18,6 +19,8 @@ export class HomePage {
   logOut() {
 
     window.localStorage.removeItem("logado");
+
+    this.storage.remove("logado");
 
     window.location.href = "/login";
     // Parse.User.logOut().then((resp) => {
