@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Storage } from '@ionic/storage';
+import { LoadingController } from '@ionic/angular';
 
 
 @Component({
@@ -11,7 +12,7 @@ import { Storage } from '@ionic/storage';
 })
 export class HomePage {
 
-  constructor(private http: HttpClient, private geolocation: Geolocation, private storage: Storage) {
+  constructor(private http: HttpClient, private geolocation: Geolocation, private storage: Storage, public loadingController: LoadingController) {
 
 
   }
@@ -36,8 +37,13 @@ export class HomePage {
     //   }).present();
     // })
   }
-  gritar() {
+  async gritar() {
 
+
+    const loading = await this.loadingController.create({
+      message: 'Gritando...'
+    });
+    loading.present();
 
     const httpOptions = {
       headers: new HttpHeaders({
@@ -46,16 +52,17 @@ export class HomePage {
     };
 
 
-    this.geolocation.getCurrentPosition({enableHighAccuracy: true,  timeout: 5000,
-      maximumAge: 0}).then((resp) => {
+    this.geolocation.getCurrentPosition({
+      enableHighAccuracy: true, timeout: 5000,
+      maximumAge: 0
+    }).then((resp) => {
 
 
-        console.log(resp.coords.latitude);
+      console.log(resp.coords.latitude);
 
       const obj = window.localStorage.getItem("logado")
 
-      if( obj != null)
-      {
+      if (obj != null) {
         var objt = JSON.parse(obj);
         console.log(objt);
         this.http.post("http://caladanuncamais.azurewebsites.net/api/alertas", {
@@ -64,46 +71,54 @@ export class HomePage {
           "Latitude": resp.coords.latitude,
           "Longitude": resp.coords.longitude
         }, httpOptions)
-          .subscribe(data =>
-            function (){
-            // When observable resolves, result should match test data
-            alert('Enviado com sucesso')
-            console.log(data)
-            alert('Data '+ JSON.stringify(data))
+          .subscribe((data) => {
+    
+              loading.dismiss();
+              alert('Enviado com sucesso');
+              // When observable resolves, result should match test data
+              
+              console.log(data)
             },
-            (err) => {alert('ERRO Subs '+ JSON.stringify(err))}
+            (err) => {
+              loading.dismiss();
+              alert('ERRO Subs ' + JSON.stringify(err))
+            }
           )
       }
-      else
-      {
+      else {
 
-      this.http.post("http://caladanuncamais.azurewebsites.net/api/alertas", {
-      "Nome": "Nathalia Garcia 2",
-      "Endereco": "Rua dona gertrudes jordão, 257",
-      "Latitude": resp.coords.latitude,
-      "Longitude": resp.coords.longitude
-    }, httpOptions)
-      .subscribe(data =>
-        function (){
-        // When observable resolves, result should match test data
-        alert('Enviado com sucesso')
-        console.log(data)
-          alert('Data '+ JSON.stringify(data))
-        },
-        (err) => {alert('ERRO Subs '+ JSON.stringify(err))}
-      )
+        this.http.post("http://caladanuncamais.azurewebsites.net/api/alertas", {
+          "Nome": "Nathalia Garcia 2",
+          "Endereco": "Rua dona gertrudes jordão, 257",
+          "Latitude": resp.coords.latitude,
+          "Longitude": resp.coords.longitude
+        }, httpOptions)
+          .subscribe(data =>
+            function () {
+              loading.dismiss();
+              // When observable resolves, result should match test data
+              alert('Enviado com sucesso')
+              console.log(data)
+              alert('Data ' + JSON.stringify(data))
+            },
+            (err) => {
+              loading.dismiss();
+              alert('ERRO Subs ' + JSON.stringify(err))
+            }
+          )
       }
-      
-      alert('Gritando!!!!!');
 
-     }).catch((error) => {
-        alert('Tente novamente, código: ' + error.code)
-        alert('Tente novamente, mensagem: ' + error.message)
-       console.log('Error getting location', error);
-     });
 
-     
-    
+
+    }).catch((error) => {
+      loading.dismiss();
+      alert('Tente novamente, código: ' + error.code)
+      alert('Tente novamente, mensagem: ' + error.message)
+      console.log('Error getting location', error);
+    });
+
+
+
   }
 
 }

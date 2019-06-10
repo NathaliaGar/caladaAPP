@@ -16,7 +16,9 @@ export class InfoPage {
   }
   public logo = 'assets\\img\\logo2.png';
 
-
+  voltar() {
+    window.location.href = "/home";
+  }
     
   
 

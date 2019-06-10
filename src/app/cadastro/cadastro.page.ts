@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-cadastro',
@@ -12,7 +13,7 @@ import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms'
 export class CadastroPage implements OnInit {
   // @ViewChild('fooForm') fooForm;
   private todo: FormGroup;
-public submitAttempt = false;
+  public submitAttempt = false;
 
   private selectedItem: any;
   private icons = [
@@ -57,7 +58,7 @@ public submitAttempt = false;
 
   }
 
-  constructor(private http: HttpClient, private formBuilder: FormBuilder) {
+  constructor(private http: HttpClient, private formBuilder: FormBuilder, public loadingController: LoadingController) {
     this.todo = this.formBuilder.group({
 
       nome: ['', Validators.required],
@@ -71,17 +72,24 @@ public submitAttempt = false;
   }
 
 
-  cadastrar() {
+  async cadastrar() {
+
+    const loading = await this.loadingController.create({
+      message: 'Aguarde'
+    });
+    loading.present();
 
     this.submitAttempt = true;
     console.log(this.todo.get('senha'));
 
-    
+
     if (!this.todo.valid) {
+
+      loading.dismiss();
       return;
     }
 
-    
+
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
@@ -101,9 +109,11 @@ public submitAttempt = false;
     }, httpOptions).subscribe((res) => {
       console.log("cadastroo", res)
       if (res != null && res != '') {
+
+        loading.dismiss();
         alert('Cadastro efetuado com sucesso');
         this.submitAttempt = false;
-        
+
         this.todo = this.formBuilder.group({
 
           nome: ['', Validators.required],
@@ -116,40 +126,26 @@ public submitAttempt = false;
         });
 
       }
-      else
+      else {
+        loading.dismiss();
         alert('Usuário já cadastrado');
-
+      }
     },
       (err) => {
+            
+        loading.dismiss();
         alert('Campos inválidos')
       });
-    // .subscribe(data =>
-    //   function (){
-    //   // When observable resolves, result should match test data
-    //   console.log("cadastroo", data)
-    //   if(data != null && data != '')
-    //     alert('Cadastro efetuado com sucesso');
-    //   else
-    //     alert('Usuário já cadastrado');
-    //   }
-    // )
 
-
-
-
+    
+  
 
   }
   cancelar() {
     window.location.href = "/login";
   }
   ngOnInit() {
-    console.log(this.todo.get('senha'));
-    // console.log( this.fooForm );
   }
 
 
-  // add back when alpha.4 is out
-  // navigate(item) {
-  //   this.router.navigate(['/list', JSON.stringify(item)]);
-  // }
 }

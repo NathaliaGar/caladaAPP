@@ -25,4 +25,8 @@ import { InfoPage } from './info.page';
     Geolocation
   ]
 })
-export class InfoPageModule {}
+export class InfoPageModule {
+
+
+
+}

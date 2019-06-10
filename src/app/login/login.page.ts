@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Routes } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Storage } from '@ionic/storage';
+import { LoadingController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-login',
@@ -16,7 +18,7 @@ export class LoginPage implements OnInit {
   public username;
   public password;
   public messageError = '';
-  constructor(private storage: Storage, private http: HttpClient) { 
+  constructor(private storage: Storage, private http: HttpClient, public loadingController: LoadingController) { 
 
     this.storage.get("logado").then(function (value) {
       if (value != null) {
@@ -33,29 +35,53 @@ export class LoginPage implements OnInit {
     })
   }
 
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      message: 'Aguarde',
+      duration: 10000
+    });
+    await loading.present();
+
+    const { role, data } = await loading.onDidDismiss();
+
+    console.log('Loading dismissed!');
+  }
+
+  async presentLoadingWithOptions() {
+    const loading = await this.loadingController.create({
+      spinner: null,
+      duration: 5000,
+      message: 'Please wait...',
+      translucent: true,
+      cssClass: 'custom-class custom-loading'
+    });
+    return await loading.present();
+  }
+
+
   ngOnInit() {
     this.usernameinput.setFocus()
   }
 
-  signIn() {
+  async signIn() {
 
-
-
-
-
+    const loading = await this.loadingController.create({
+      message: 'Aguarde'
+    });
+    loading.present();
+    
       this.messageError = '';
       const httpOptions = {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'
         })
-      };
-  
-        this.http.post("http://caladanuncamais.azurewebsites.net/api/login", {
-          
+      };  
+      this.http.post("http://caladanuncamais.azurewebsites.net/api/login", {    
             "Usuario" : this.username,
             "Senha" : this.password
-        
       }, httpOptions).subscribe((res)=>{
+
+        
         console.log("loginn", res)
         if(res != null && res != '')
         {          
@@ -63,21 +89,22 @@ export class LoginPage implements OnInit {
           
           this.storage.set('logado', JSON.stringify(res));
 
-          
-          
           window.location.href = "/home";
         }
         else
           this.messageError = 'Login e senha inválidos';
+
+          loading.dismiss();
         
     },
-    (err) => {alert('Login inválido')});
+    (err) => {
+    
+      loading.dismiss();
+      alert('Login inválido')
+    
+    });
       
     }
-
-
-
-
   signUp() {
 
     window.location.href = "/cadastro";
